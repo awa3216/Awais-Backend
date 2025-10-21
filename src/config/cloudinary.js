@@ -6,7 +6,10 @@ let apiKey = process.env.CLOUDINARY_API_KEY;
 let apiSecret = process.env.CLOUDINARY_API_SECRET;
 
 // If CLOUDINARY_API_KEY contains a full URL, extract the components
-if (process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_KEY.includes('cloudinary://')) {
+if (
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_KEY.includes('cloudinary://')
+) {
   const url = process.env.CLOUDINARY_API_KEY;
   const match = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
   if (match) {
