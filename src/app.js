@@ -35,6 +35,7 @@ const startServer = async () => {
       cors({
         origin: [
           'https://faraway-admin-panel.vercel.app',
+          'https://awais-admin-pannel-main.vercel.app',
           'http://localhost:3000',
           'http://localhost:3001',
           'https://fa-taupe.vercel.app',

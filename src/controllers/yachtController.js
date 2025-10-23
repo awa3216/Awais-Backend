@@ -172,18 +172,14 @@ export const getAllYachts = async (req, res, next) => {
     // Use Promise.all for parallel execution
     const [yachts, total, recentlyUpdated] = await Promise.all([
       Yacht.find(filter)
-        .sort({ updatedAt: -1, createdAt: -1 })
+        .sort({ createdDate: -1 })
         .skip(skip)
         .limit(parsedLimit)
         .lean()
         .exec(), // Use exec() for better performance
       Yacht.countDocuments(filter).exec(),
       // Recently updated (last 5)
-      Yacht.find(filter)
-        .sort({ updatedAt: -1, createdAt: -1 })
-        .limit(5)
-        .lean()
-        .exec(),
+      Yacht.find(filter).sort({ createdDate: -1 }).limit(5).lean().exec(),
     ]);
 
     // Map image filenames to URLs and return yachts
