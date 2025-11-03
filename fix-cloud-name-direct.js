@@ -19,22 +19,24 @@ async function fixCloudName() {
   for (const yacht of yachts) {
     checked++;
     const updates = {};
-    let needsUpdate = false;
     
-    if (yacht.primaryImage && yacht.primaryImage.includes('ddwu6s15x')) {
-      updates.primaryImage = yacht.primaryImage.replace(/ddwu6s15x/g, 'ddwu6sl5x');
-      needsUpdate = true;
+    if (yacht.primaryImage) {
+      const original = yacht.primaryImage;
+      const fixed = original.replace(/ddwu6s15x/g, 'ddwu6sl5x');
+      if (fixed !== original) {
+        updates.primaryImage = fixed;
+      }
     }
     
     if (yacht.galleryImages && Array.isArray(yacht.galleryImages)) {
       const newGallery = yacht.galleryImages.map(img => {
-        if (img && typeof img === 'string' && img.includes('ddwu6s15x')) {
-          needsUpdate = true;
+        if (img && typeof img === 'string') {
           return img.replace(/ddwu6s15x/g, 'ddwu6sl5x');
         }
         return img;
       });
-      if (needsUpdate) {
+      const galleryChanged = JSON.stringify(newGallery) !== JSON.stringify(yacht.galleryImages);
+      if (galleryChanged) {
         updates.galleryImages = newGallery;
       }
     }
