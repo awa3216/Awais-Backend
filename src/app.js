@@ -41,6 +41,7 @@ const startServer = async () => {
           'https://fa-taupe.vercel.app',
           'https://faraway-admin-pannel.vercel.app',
           'https://faraway-psi.vercel.app',
+          'https://vercel-awaisi.vercel.app',
         ],
         credentials: true,
       })
