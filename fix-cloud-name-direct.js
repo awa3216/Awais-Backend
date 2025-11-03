@@ -10,21 +10,20 @@ async function fixCloudName() {
   const db = mongoose.connection.db;
   const collection = db.collection('yachts');
   
-  const yachts = await collection.find({}).toArray();
-  console.log(`🔍 Found ${yachts.length} yachts\n`);
+  console.log('🔧 Replacing ddwu6s15x → ddwu6sl5x in all URLs...\n');
   
   let fixed = 0;
-  let checked = 0;
+  const yachts = await collection.find({}).toArray();
   
   for (const yacht of yachts) {
-    checked++;
+    let needsUpdate = false;
     const updates = {};
     
-    if (yacht.primaryImage) {
-      const original = yacht.primaryImage;
-      const fixed = original.replace(/ddwu6s15x/g, 'ddwu6sl5x');
-      if (fixed !== original) {
-        updates.primaryImage = fixed;
+    if (yacht.primaryImage && typeof yacht.primaryImage === 'string') {
+      const newUrl = yacht.primaryImage.replace(/ddwu6s15x/g, 'ddwu6sl5x');
+      if (newUrl !== yacht.primaryImage) {
+        updates.primaryImage = newUrl;
+        needsUpdate = true;
       }
     }
     
@@ -35,13 +34,14 @@ async function fixCloudName() {
         }
         return img;
       });
-      const galleryChanged = JSON.stringify(newGallery) !== JSON.stringify(yacht.galleryImages);
-      if (galleryChanged) {
+      
+      if (JSON.stringify(newGallery) !== JSON.stringify(yacht.galleryImages)) {
         updates.galleryImages = newGallery;
+        needsUpdate = true;
       }
     }
     
-    if (Object.keys(updates).length > 0) {
+    if (needsUpdate) {
       await collection.updateOne({ _id: yacht._id }, { $set: updates });
       fixed++;
       if (fixed % 10 === 0) {
@@ -50,19 +50,7 @@ async function fixCloudName() {
     }
   }
   
-  console.log(`\n📊 Summary:`);
-  console.log(`   - Checked: ${checked} yachts`);
-  console.log(`   - Fixed: ${fixed} yachts`);
-  
-  if (fixed === 0 && checked > 0) {
-    console.log(`\n🔍 Debugging: Checking first yacht's URL...`);
-    const firstYacht = yachts[0];
-    if (firstYacht.primaryImage) {
-      console.log(`   Primary Image: ${firstYacht.primaryImage}`);
-      console.log(`   Contains 'ddwu6s15x': ${firstYacht.primaryImage.includes('ddwu6s15x')}`);
-      console.log(`   Contains 'ddwu6sl5x': ${firstYacht.primaryImage.includes('ddwu6sl5x')}`);
-    }
-  }
+  console.log(`\n✅ Fixed ${fixed} yachts`);
   
   await mongoose.connection.close();
   process.exit(0);
