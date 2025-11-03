@@ -61,7 +61,7 @@ export const addYacht = async (req, res, next) => {
 
         yachtData.primaryImage = await uploadToCloudinary(
           file.path,
-          'yachts/primaryImage'
+          'images/Faraway/yachts/primaryImage'
         );
         console.log('✅ Primary image uploaded successfully');
       } catch (uploadError) {
@@ -106,7 +106,7 @@ export const addYacht = async (req, res, next) => {
 
           const url = await uploadToCloudinary(
             file.path,
-            'yachts/galleryImages'
+            'images/Faraway/yachts/galleryImages'
           );
           yachtData.galleryImages.push(url);
           console.log('✅ Gallery image uploaded successfully');
@@ -304,7 +304,7 @@ export const editYacht = async (req, res, next) => {
         const file = req.files.primaryImage[0];
         yachtData.primaryImage = await uploadToCloudinary(
           file.path,
-          'Faraway/yachts/primaryImage'
+          'images/Faraway/yachts/primaryImage'
         );
       } catch (uploadError) {
         return next(
@@ -328,7 +328,7 @@ export const editYacht = async (req, res, next) => {
         try {
           const url = await uploadToCloudinary(
             file.path,
-            'Faraway/yachts/galleryImages'
+            'images/Faraway/yachts/galleryImages'
           );
           newGalleryImages.push(url);
         } catch (uploadError) {
