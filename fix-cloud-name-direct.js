@@ -14,8 +14,10 @@ async function fixCloudName() {
   console.log(`🔍 Found ${yachts.length} yachts\n`);
   
   let fixed = 0;
+  let checked = 0;
   
   for (const yacht of yachts) {
+    checked++;
     const updates = {};
     let needsUpdate = false;
     
@@ -46,7 +48,19 @@ async function fixCloudName() {
     }
   }
   
-  console.log(`\n✅ Fixed cloud name typo in ${fixed} yachts`);
+  console.log(`\n📊 Summary:`);
+  console.log(`   - Checked: ${checked} yachts`);
+  console.log(`   - Fixed: ${fixed} yachts`);
+  
+  if (fixed === 0 && checked > 0) {
+    console.log(`\n🔍 Debugging: Checking first yacht's URL...`);
+    const firstYacht = yachts[0];
+    if (firstYacht.primaryImage) {
+      console.log(`   Primary Image: ${firstYacht.primaryImage}`);
+      console.log(`   Contains 'ddwu6s15x': ${firstYacht.primaryImage.includes('ddwu6s15x')}`);
+      console.log(`   Contains 'ddwu6sl5x': ${firstYacht.primaryImage.includes('ddwu6sl5x')}`);
+    }
+  }
   
   await mongoose.connection.close();
   process.exit(0);
